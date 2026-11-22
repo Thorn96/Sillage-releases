@@ -33,6 +33,10 @@ h1 span { color: var(--accent) }
 .dl { display: inline-flex; align-items: center; gap: 10px; height: 54px; padding: 0 28px; border-radius: 12px; background: var(--accent); color: #061020; font-weight: 700; font-size: 17px; text-decoration: none; transition: box-shadow .2s, transform .2s }
 .dl:hover { box-shadow: 0 0 0 6px rgba(76,195,255,.22); transform: translateY(-1px) }
 .dl svg { width: 20px; height: 20px }
+.dl.alt { background: var(--raise); color: var(--text); border: 1px solid var(--line); height: 46px; font-size: 15px }
+.dl.alt:hover { box-shadow: 0 0 0 6px rgba(76,195,255,.12) }
+.dl[hidden] { display: none }
+.android .cta .win { order: 2 } .android .cta .meta { order: 3 }
 .meta { color: var(--muted); font-size: 13px }
 .platforms { display: flex; gap: 8px; justify-content: center; margin-top: 18px }
 .pf { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; background: var(--raise); border: 1px solid var(--line); font-size: 13px; color: var(--muted) }
@@ -82,9 +86,13 @@ footer { border-top: 1px solid var(--line); padding: 28px 0 44px; display: flex;
     <h1 data-t="h1"></h1>
     <p class="lead" data-t="lead"></p>
     <div class="cta">
-      <a class="dl" href="https://github.com/Thorn96/Sillage-releases/releases/latest">
+      <a class="dl win" href="https://github.com/Thorn96/Sillage-releases/releases/latest">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
         <span data-t="dl"></span>
+      </a>
+      <a class="dl alt apk" href="https://github.com/Thorn96/Sillage-releases/releases/latest" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+        <span data-t="dlApk"></span>
       </a>
       <span class="meta ver" data-t="meta"></span>
     </div>
@@ -114,15 +122,19 @@ footer { border-top: 1px solid var(--line); padding: 28px 0 44px; display: flex;
 
   <section class="steps">
     <h2 data-t="installTitle"></h2>
-    <ol><li data-t="s1"></li><li data-t="s2"></li><li data-t="s3"></li></ol>
+    <ol><li data-t="s1"></li><li data-t="s2"></li><li data-t="s3"></li><li data-t="s4"></li></ol>
   </section>
 
   <section class="final">
     <h2 data-t="finalTitle"></h2>
     <div class="cta">
-      <a class="dl" href="https://github.com/Thorn96/Sillage-releases/releases/latest">
+      <a class="dl win" href="https://github.com/Thorn96/Sillage-releases/releases/latest">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
         <span data-t="dl"></span>
+      </a>
+      <a class="dl alt apk" href="https://github.com/Thorn96/Sillage-releases/releases/latest" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+        <span data-t="dlApk"></span>
       </a>
       <span class="meta ver" data-t="meta"></span>
     </div>
@@ -139,7 +151,7 @@ const T = {
   fr: {
     h1: 'Twitch, Kick et YouTube.<br><span>Une seule app. Zéro pub.</span>',
     lead: 'Sillage réunit les chaînes que tu suis sur les trois plateformes dans une seule liste, et lance les streams sans les pubs qui coupent le live.',
-    dl: 'Télécharger pour Windows', meta: 'Gratuit · Windows 10 et 11',
+    dl: 'Télécharger pour Windows', dlApk: 'Télécharger pour Android', meta: 'Gratuit · Windows 10 et 11 · Android',
     altWatch: "Sillage : la liste des chaînes suivies à gauche, un live Twitch au centre et son chat à droite",
     altMulti: 'Le multistream de Sillage avec quatre lives côte à côte', altAgenda: "L'agenda esport de Sillage : les matchs en cours avec les scores",
     mLabel: 'Multistream', mTitle: "Jusqu'à 4 lives, toutes plateformes mélangées", mText: "Glisse une chaîne depuis ta liste sur la grille, ou sur une case pour la remplacer. Chaque live a son volume et sa qualité ; un clic sur une vidéo pour n'entendre qu'elle.",
@@ -154,13 +166,14 @@ const T = {
     s1: 'Télécharge <b>Sillage-Setup.exe</b> et lance-le.',
     s2: "Windows peut afficher « Windows a protégé votre ordinateur » : l'app n'est pas encore signée. Clique sur <b>Informations complémentaires</b>, puis <b>Exécuter quand même</b>.",
     s3: 'Connecte tes comptes Twitch, Kick et YouTube dans les réglages. Les mises à jour arrivent ensuite toutes seules.',
+    s4: "Sur Android : télécharge <b>Sillage.apk</b> sur ton téléphone et ouvre-le. Android demande d'autoriser ton navigateur à installer des applications, accepte. Les mises à jour se proposent ensuite dans les réglages de l'app. Kick n'est pas encore disponible sur Android.",
     finalTitle: 'Regarde tes streams sans les pubs.',
     foot: 'Sillage est gratuit, sans compte ni publicité.', coffee: 'Offrir un café',
   },
   en: {
     h1: 'Twitch, Kick and YouTube.<br><span>One app. Zero ads.</span>',
     lead: 'Sillage brings the channels you follow on all three platforms into one list, and plays streams without the ads that cut the live.',
-    dl: 'Download for Windows', meta: 'Free · Windows 10 and 11',
+    dl: 'Download for Windows', dlApk: 'Download for Android', meta: 'Free · Windows 10 and 11 · Android',
     altWatch: 'Sillage: the followed channels on the left, a Twitch live in the middle and its chat on the right',
     altMulti: "Sillage's multistream with four lives side by side", altAgenda: "Sillage's esports agenda: matches in progress with their scores",
     mLabel: 'Multistream', mTitle: 'Up to 4 lives, any platform', mText: 'Drag a channel from your list onto the grid, or onto a tile to replace it. Each live has its own volume and quality; click a video to hear only it.',
@@ -175,6 +188,7 @@ const T = {
     s1: 'Download <b>Sillage-Setup.exe</b> and run it.',
     s2: 'Windows may show "Windows protected your PC": the app is not signed yet. Click <b>More info</b>, then <b>Run anyway</b>.',
     s3: 'Connect your Twitch, Kick and YouTube accounts in settings. Updates then arrive on their own.',
+    s4: 'On Android: download <b>Sillage.apk</b> on your phone and open it. Android asks to let your browser install apps: accept. Updates are then offered in the app settings. Kick is not available on Android yet.',
     finalTitle: 'Watch your streams without the ads.',
     foot: 'Sillage is free, with no account and no ads.', coffee: 'Buy me a coffee',
   },
@@ -189,11 +203,14 @@ function apply() {
   if (version) for (const el of document.querySelectorAll('.ver')) el.textContent = `${T[lang].meta} · v${version}`
 }
 document.querySelector('.lang').onclick = e => { const b = e.target.closest('[data-l]'); if (b) { lang = b.dataset.l; localStorage.setItem('lang', lang); apply() } }
+if (/Android/i.test(navigator.userAgent)) document.body.classList.add('android')
 apply()
 // point the buttons straight at the latest installer
 fetch('https://api.github.com/repos/Thorn96/Sillage-releases/releases/latest').then(r => r.json()).then(r => {
   const exe = r.assets?.find(a => a.name.endsWith('.exe'))
-  if (exe) for (const a of document.querySelectorAll('.dl')) a.href = exe.browser_download_url
+  if (exe) for (const a of document.querySelectorAll('.win')) a.href = exe.browser_download_url
+  const apk = r.assets?.find(a => a.name.endsWith('.apk'))
+  if (apk) for (const a of document.querySelectorAll('.apk')) { a.href = apk.browser_download_url; a.hidden = false }
   version = r.tag_name?.replace(/^v/, '') ?? ''
   apply()
 }).catch(() => {})

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sillage · Twitch, Kick et YouTube sans pub</title>
+<meta name="description" content="Sillage réunit tes chaînes Twitch, Kick et YouTube dans une seule app Windows, sans pub. Multistream, agenda esport, notifications de live. Gratuit.">
+<meta property="og:title" content="Sillage · Twitch, Kick et YouTube sans pub">
+<meta property="og:description" content="Tes chaînes Twitch, Kick et YouTube dans une seule app, sans pub. Gratuit, pour Windows.">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<style>
+:root { --bg: #070b14; --panel: #0a1120; --raise: #101a2c; --hover: #13213a; --line: rgba(160,200,255,.08); --text: #eaf2ff; --muted: #8796b0; --accent: #4cc3ff; --live: #ff3b5c }
+* { box-sizing: border-box; margin: 0 }
+body { background: radial-gradient(80% 50% at 60% -5%, rgba(28,96,190,.3), transparent 65%) var(--bg); color: var(--text); font: 16px/1.6 Inter, "Segoe UI", system-ui, sans-serif; -webkit-font-smoothing: antialiased }
+a { color: var(--accent) }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px }
+header { display: flex; align-items: center; gap: 12px; padding: 24px 0 }
+header img { width: 36px; height: 36px }
+header b { font: 700 20px "Segoe UI", system-ui; letter-spacing: -.01em; flex: 1 }
+.lang { display: inline-flex; gap: 4px; padding: 4px; border-radius: 10px; background: var(--raise) }
+.lang button { border: 0; background: none; color: var(--muted); font: 600 13px inherit; padding: 6px 10px; border-radius: 7px; cursor: pointer }
+.lang button.on { background: var(--hover); color: var(--text) }
+.hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 48px; align-items: center; padding: 48px 0 72px }
+h1 { font: 700 clamp(36px, 5vw, 56px)/1.08 "Segoe UI", system-ui; letter-spacing: -.02em }
+h1 span { color: var(--accent) }
+.lead { color: var(--muted); font-size: 18px; margin: 20px 0 32px; max-width: 30em }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center }
+.dl { display: inline-flex; align-items: center; gap: 10px; height: 52px; padding: 0 24px; border-radius: 12px; background: var(--accent); color: #061020; font-weight: 700; text-decoration: none; transition: box-shadow .2s }
+.dl:hover { box-shadow: 0 0 0 6px rgba(76,195,255,.22) }
+.dl svg { width: 20px; height: 20px }
+.meta { color: var(--muted); font-size: 13px }
+/* stylised app window */
+.mock { border-radius: 14px; border: 1px solid var(--line); background: var(--panel); box-shadow: 0 24px 64px rgba(0,0,0,.5); overflow: hidden; display: grid; grid-template-columns: 30% 1fr; aspect-ratio: 16 / 10 }
+.m-side { padding: 14px 10px; border-right: 1px solid var(--line); display: flex; flex-direction: column; gap: 8px }
+.m-row { display: flex; align-items: center; gap: 8px; padding: 6px; border-radius: 8px }
+.m-row.on { background: var(--hover) }
+.m-av { position: relative; width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0 }
+.m-av i { position: absolute; left: -3px; bottom: -3px; width: 11px; height: 11px; border-radius: 3px; box-shadow: 0 0 0 2px var(--panel) }
+.m-lines { flex: 1; display: flex; flex-direction: column; gap: 4px }
+.m-lines span { height: 6px; border-radius: 3px; background: rgba(234,242,255,.18) }
+.m-lines span + span { width: 60%; background: rgba(135,150,176,.25) }
+.m-main { padding: 14px; display: flex; flex-direction: column; gap: 10px }
+.m-video { flex: 1; border-radius: 10px; background: linear-gradient(135deg, #14305e, #0b1a33 60%, #102844); position: relative }
+.m-video b { position: absolute; left: 10px; top: 10px; background: var(--live); color: #fff; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 4px; letter-spacing: .06em }
+.m-video em { position: absolute; left: 50%; top: 50%; width: 0; height: 0; border-style: solid; border-width: 16px 0 16px 26px; border-color: transparent transparent transparent rgba(255,255,255,.85); transform: translate(-40%, -50%) }
+.m-info { display: flex; gap: 8px; align-items: center }
+.m-info .m-lines span { height: 8px }
+section h2 { font: 700 28px "Segoe UI", system-ui; letter-spacing: -.01em; margin-bottom: 24px }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; padding-bottom: 72px }
+.card { padding: 20px; border-radius: 14px; background: var(--panel); border: 1px solid var(--line) }
+.card h3 { font-size: 16px; margin-bottom: 6px }
+.card p { color: var(--muted); font-size: 14px }
+.steps { padding-bottom: 72px }
+.steps ol { padding-left: 20px; color: var(--muted) }
+.steps li { margin-bottom: 8px }
+.steps b { color: var(--text) }
+footer { border-top: 1px solid var(--line); padding: 32px 0 48px; display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between; align-items: center; color: var(--muted); font-size: 14px }
+.bmc { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border-radius: 10px; background: #ffdd00; color: #0d0c22; font-weight: 700; text-decoration: none; font-size: 14px }
+.pf-tw { background: #9146ff } .pf-k { background: #53fc18 } .pf-yt { background: #ff0033 }
+@media (max-width: 860px) { .hero { grid-template-columns: 1fr } .grid { grid-template-columns: 1fr } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <img src="logo.svg" alt="">
+    <b>Sillage</b>
+    <div class="lang" role="group" aria-label="Langue / Language"><button data-l="fr">FR</button><button data-l="en">EN</button></div>
+  </header>
+
+  <div class="hero">
+    <div>
+      <h1 data-t="h1"></h1>
+      <p class="lead" data-t="lead"></p>
+      <div class="cta">
+        <a class="dl" id="dl" href="https://github.com/Thorn96/Sillage-releases/releases/latest">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>
+          <span data-t="dl"></span>
+        </a>
+        <span class="meta" id="ver" data-t="meta"></span>
+      </div>
+    </div>
+    <div class="mock" aria-hidden="true">
+      <div class="m-side">
+        <div class="m-row on"><span class="m-av" style="background:#2a4a7a"><i class="pf-tw"></i></span><span class="m-lines"><span></span><span></span></span></div>
+        <div class="m-row"><span class="m-av" style="background:#3a5a4a"><i class="pf-k"></i></span><span class="m-lines"><span></span><span></span></span></div>
+        <div class="m-row"><span class="m-av" style="background:#5a3a4a"><i class="pf-yt"></i></span><span class="m-lines"><span></span><span></span></span></div>
+        <div class="m-row"><span class="m-av" style="background:#4a4a6a"><i class="pf-tw"></i></span><span class="m-lines"><span></span><span></span></span></div>
+        <div class="m-row"><span class="m-av" style="background:#2a5a6a"><i class="pf-yt"></i></span><span class="m-lines"><span></span><span></span></span></div>
+      </div>
+      <div class="m-main">
+        <div class="m-video"><b>LIVE</b><em></em></div>
+        <div class="m-info"><span class="m-av" style="background:#2a4a7a"></span><span class="m-lines"><span></span><span></span></span></div>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <h2 data-t="whyTitle"></h2>
+    <div class="grid">
+      <div class="card"><h3 data-t="f1t"></h3><p data-t="f1"></p></div>
+      <div class="card"><h3 data-t="f2t"></h3><p data-t="f2"></p></div>
+      <div class="card"><h3 data-t="f3t"></h3><p data-t="f3"></p></div>
+      <div class="card"><h3 data-t="f4t"></h3><p data-t="f4"></p></div>
+      <div class="card"><h3 data-t="f5t"></h3><p data-t="f5"></p></div>
+      <div class="card"><h3 data-t="f6t"></h3><p data-t="f6"></p></div>
+    </div>
+  </section>
+
+  <section class="steps">
+    <h2 data-t="installTitle"></h2>
+    <ol>
+      <li data-t="s1"></li>
+      <li data-t="s2"></li>
+      <li data-t="s3"></li>
+    </ol>
+  </section>
+
+  <footer>
+    <span data-t="foot"></span>
+    <a class="bmc" href="https://buymeacoffee.com/leonardguido" target="_blank" rel="noopener">☕ <span data-t="coffee"></span></a>
+  </footer>
+</div>
+
+<script>
+const T = {
+  fr: {
+    h1: 'Twitch, Kick et YouTube. <span>Une seule app.</span> Zéro pub.',
+    lead: 'Sillage réunit les chaînes que tu suis sur les trois plateformes dans une seule liste, et lance les streams sans les pubs qui coupent le live.',
+    dl: 'Télécharger pour Windows', meta: 'Gratuit · Windows 10 et 11',
+    whyTitle: 'Ce que fait Sillage',
+    f1t: 'Sans pub', f1: 'Les pubs insérées dans les lives Twitch sont évitées, et celles de YouTube retirées. Un compteur te montre combien.',
+    f2t: 'Une seule liste', f2: 'Tes follows Twitch, Kick et YouTube ensemble, triés par spectateurs ou groupés par jeu, avec favoris et dossiers.',
+    f3t: 'Multistream', f3: "Jusqu'à 4 lives côte à côte, toutes plateformes mélangées. Glisse une chaîne depuis la liste, règle le son de chacune.",
+    f4t: 'Agenda esport', f4: 'Les matchs du jour avec les scores en direct, et le planning de tes streamers pour la semaine.',
+    f5t: 'Notifications', f5: 'Prévenu quand une chaîne passe en live ou change de jeu, avec la photo du streamer. Heures calmes incluses.',
+    f6t: 'Confort', f6: 'Mini-lecteur toujours visible, mode audio seul, minuteur de sommeil, VODs et clips, raccourcis clavier.',
+    installTitle: 'Installation',
+    s1: 'Télécharge <b>Sillage-Setup.exe</b> et lance-le.',
+    s2: "Windows peut afficher « Windows a protégé votre ordinateur » : l'app n'est pas encore signée. Clique sur <b>Informations complémentaires</b>, puis <b>Exécuter quand même</b>.",
+    s3: 'Connecte tes comptes Twitch, Kick et YouTube dans les réglages. Les mises à jour arrivent ensuite toutes seules.',
+    foot: 'Sillage est gratuit, sans compte ni publicité.', coffee: 'Offrir un café',
+  },
+  en: {
+    h1: 'Twitch, Kick and YouTube. <span>One app.</span> Zero ads.',
+    lead: 'Sillage brings the channels you follow on all three platforms into one list, and plays streams without the ads that cut the live.',
+    dl: 'Download for Windows', meta: 'Free · Windows 10 and 11',
+    whyTitle: 'What Sillage does',
+    f1t: 'No ads', f1: 'Ads stitched into Twitch lives are avoided and YouTube ads removed. A counter shows how many.',
+    f2t: 'One list', f2: 'Your Twitch, Kick and YouTube follows together, sorted by viewers or grouped by game, with favourites and folders.',
+    f3t: 'Multistream', f3: 'Up to 4 lives side by side, any platform. Drag a channel from the list, set each one’s volume.',
+    f4t: 'Esports agenda', f4: "Today's matches with live scores, and your streamers' schedule for the week.",
+    f5t: 'Notifications', f5: 'Know when a channel goes live or switches game, with the streamer’s picture. Quiet hours included.',
+    f6t: 'Comfort', f6: 'Always-on-top mini player, audio-only mode, sleep timer, VODs and clips, keyboard shortcuts.',
+    installTitle: 'Install',
+    s1: 'Download <b>Sillage-Setup.exe</b> and run it.',
+    s2: 'Windows may show "Windows protected your PC": the app is not signed yet. Click <b>More info</b>, then <b>Run anyway</b>.',
+    s3: 'Connect your Twitch, Kick and YouTube accounts in settings. Updates then arrive on their own.',
+    foot: 'Sillage is free, with no account and no ads.', coffee: 'Buy me a coffee',
+  },
+}
+let lang = localStorage.getItem('lang') || (navigator.languages.some(l => l.startsWith('fr')) ? 'fr' : 'en')
+let version = ''
+function apply() {
+  document.documentElement.lang = lang
+  for (const el of document.querySelectorAll('[data-t]')) el.innerHTML = T[lang][el.dataset.t]
+  for (const b of document.querySelectorAll('.lang button')) b.classList.toggle('on', b.dataset.l === lang)
+  if (version) document.getElementById('ver').textContent = `${T[lang].meta} · v${version}`
+}
+document.querySelector('.lang').onclick = e => { const b = e.target.closest('[data-l]'); if (b) { lang = b.dataset.l; localStorage.setItem('lang', lang); apply() } }
+apply()
+// point the button straight at the latest installer
+fetch('https://api.github.com/repos/Thorn96/Sillage-releases/releases/latest').then(r => r.json()).then(r => {
+  const exe = r.assets?.find(a => a.name.endsWith('.exe'))
+  if (exe) document.getElementById('dl').href = exe.browser_download_url
+  version = r.tag_name?.replace(/^v/, '') ?? ''
+  apply()
+}).catch(() => {})
+</script>
+</body>
+</html>
